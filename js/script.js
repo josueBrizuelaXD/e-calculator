@@ -18,123 +18,146 @@ var zeroBtn = document.getElementById("zero-btn");
 var equalBtn = document.getElementById("equal-btn");
 var resultLbl = document.getElementById("result-lbl");
 var historyLbl = document.getElementById("history-lbl");
-var leftOp;
-var rightOp;
-var operator = "";
-var isDecimalOp = false;
-var isOperating = false;
 var addStr = "+";
 var subStr = "−";
 var mulStr = "×";
 var divStr = "÷";
-var lastOp = "";
+var hasReset = false;
 
 function addValue(id) {
+	
+	 
+	
+	var historyStr = historyLbl.innerHTML;
+	var resultStr = resultLbl.innerHTML;
+	
+	if ((resultStr === addStr && id.innerHTML === "0")|| (resultStr === subStr && id.innerHTML === "0") || (resultStr === mulStr && id.innerHTML === "0") || (resultStr === divStr && id.innerHTML === "0")) {
+	return;		
+	}
+	
 	console.log("id: " + id.innerHTML);
 	
-	if (historyLbl.innerHTML === "0") {
-			lastOp = historyLbl.innerHTML;
-		console.log("lastOp: " + lastOp);
-		historyLbl.innerHTML = id.innerHTML;
-	} else {
-		lastOp = historyLbl.innerHTML;
-		console.log("lastOp: " + lastOp);
-		historyLbl.innerHTML += id.innerHTML;
-	}
-	
-	
-	 if(resultLbl.innerHTML === "0" ||  isOperating !== false) {
+	if (historyLbl.innerHTML === "0" || hasReset) {
 		
-		resultLbl.innerHTML = id.innerHTML;
-	} else {
-		resultLbl.innerHTML += id.innerHTML;
+		if (historyStr.length <= 23) {
+		
+		historyLbl.innerHTML = id.innerHTML;	
+		}
+		
+			
+	}  else {
+		
+		if (historyStr.length <= 23) {
+			
+		historyLbl.innerHTML += id.innerHTML;
+		}
+		
+		
 	}
 	
-	if (leftOp === undefined) {
-			leftOp = parseInt(resultLbl.innerHTML);
-		} else {
-			rightOp = parseInt(resultLbl.innerHTML);
-		}
+	 
+		
+		if (resultStr.length <= 8 && resultStr.length >= 1 && resultStr !== "0" && resultStr !== addStr && resultStr !== subStr && resultStr !== mulStr && resultStr !== divStr && !hasReset) {
+			resultLbl.innerHTML += id.innerHTML;
+		} else if (resultStr.length < 1 || resultStr === "0") {
+			resultLbl.innerHTML = id.innerHTML;
+		} else if (resultStr !== addStr || resultStr !== subStr || resultStr !== mulStr || resultStr !== divStr) {
+			resultLbl.innerHTML = id.innerHTML;
+		} else if (hasReset) {
+			resultLbl.innerHTML = id.innerHTML;
+		} 
+		
 	
-	isOperating = false;
+	hasReset = false;
 	
 }
 
 function addOperator(id, op){
+	if (resultLbl.innerHTML === "0") {
+		return;
+	}	
 	
+	hasReset = false;
+	var historyStr = historyLbl.innerHTML;
+	resultLbl.innerHTML = id.innerHTML;
 	
-	if (leftOp !== undefined && rightOp !== undefined && isOperating === false) {
-			
-			calculateResult();
+	if ((historyStr[historyStr.length - 1] === addStr) || (historyStr[historyStr.length - 1] === subStr) || (historyStr[historyStr.length - 1] === mulStr) || (historyStr[historyStr.length - 1] === divStr)) {
+		return;
+	}
+	
+	historyStr+=id.innerHTML;
+	historyLbl.innerHTML = historyStr;
+	console.log("history: " + historyStr);
+	
 		
-		}
-	
-		
-		console.log("leftOp: " + leftOp);
-		console.log("rightOp: " + rightOp);
-	
-	lastOp = historyLbl.innerHTML;
-	console.log("lastOp: " + lastOp);
-		historyLbl.innerHTML += id.innerHTML;
-		resultLbl.innerHTML = id.innerHTML;
-		console.log("op: " + op);
-		operator = op;
-	    isOperating = true;
-
-		
-}
-
-
-function calculateResult() {
-	switch (operator) {
-			case "addition":
-				leftOp = leftOp + rightOp;
-				console.log("leftOp result is: " + leftOp);	
-				break;
-			case "substraction":
-				leftOp = leftOp - rightOp;
-				console.log("leftOp result is: " + leftOp);	
-				break;
-			case "multiplication":
-				leftOp = leftOp * rightOp;
-				console.log("leftOp result is: " + leftOp);	
-				break;
-			case "division":
-				leftOp = leftOp / rightOp;
-				console.log("leftOp result is: " + leftOp);	
-				break;
-			default:
-				break;
-			   }
 }
 
 
 function getResult(id) {
-	if (leftOp !== undefined && rightOp !== undefined && isOperating === false && operator !== "") {
-			
-			calculateResult();
+var reg = /([+−×÷])/
+var historyStr = historyLbl.innerHTML;
+var arr = historyStr.split(reg);
+var operatorsArr = [];
+var operandArr = [];
 	
-		resultLbl.innerHTML = leftOp;
-		console.log("lastOp: " + lastOp);
-		historyLbl.innerHTML = leftOp;
-		lastOp = historyLbl.innerHTML;
-		rightOp = undefined;
-		isOperating = false;
-		}
+console.log("arr: " + arr);	
 	
+for (var i = 0; i < arr.length ; i++) {
+	if (i % 2 == 0) {
+		operandArr.push(arr[i]);
+	} else {
+		operatorsArr.push(arr[i]);
+	}
+}
+	
+
+var firstDig = operandArr[0];
+var firstOpera = operatorsArr[0];
+	
+for (var j = 0; j < operandArr.length; j++) {
+	
+	
+	
+	if (j === 0) {
+		continue;
+	} else {
+		var secondD = operandArr[j];
+		console.log("firstOperand(before): " + firstOpera);
+		switch (firstOpera) {
+			case "+":
+				firstDig = parseInt(firstDig) + parseInt(secondD);
+				break;
+			case "−":
+				firstDig = parseInt(firstDig) - parseInt(secondD);
+				break;
+			case "×":
+				firstDig = parseInt(firstDig) * parseInt(secondD);
+				break;
+			case "÷":
+				firstDig = parseInt(firstDig) / parseInt(secondD);
+				break;
+			default:
+				break;	
+			}
+		firstOpera = operatorsArr[j];
+		console.log("firstOperand: " + firstOpera);
+	}
+	
+}	
+	
+console.log("arrOperand: " + operandArr);	
+console.log("arrOperators: " + operatorsArr);
+console.log("RESULT: " + firstDig);	
+resultLbl.innerHTML = firstDig;
+historyLbl.innerHTML = firstDig;	
+hasReset = true;	
 }
 
 function clearLastOperation(id) {
-	resultLbl.innerHTML = "0";
-	rightOp = undefined;
-	if (isOperating) {
-		isOperating = false;
-		historyLbl.innerHTML = lastOp;
-		operator = "";
-	
-	} else {
-		historyLbl.innerHTML = lastOp;
-	}
+var historyStr = historyLbl.innerHTML;
+var newStr = historyStr.slice(0, historyStr.length - 1);
+historyLbl.innerHTML = newStr;	
+
 }
 
 function clearWholeOperation(id) {
