@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html>
+	
+<head>
+	<link rel="stylesheet" href="css/style.css">
+	<meta charset="utf-8">
+</head>
+	
+<body>
+<div class="calculator-container">
+	<div class="cal-head">
+	
+  	<h1 class="result-label" id="result-lbl">0</h1>
+	
+	
+	
+	<p class="history-label" id="history-lbl">0</p>
+
+	</div>
+	<div class="cal-body">
+
+	<div class="cal-sec">
+	<span class="cal-btn cal-key-func" id="AC-btn" onclick="clearWholeOperation()">AC</span>
+	<span class="cal-btn cal-key-func" id="CE-btn" onclick="clearLastOperation()">CE</span>
+	<span class="cal-btn cal-key-func" id="dot-btn">.</span>	
+	<span class="cal-btn cal-key-func" id="division-btn" onclick="addOperator(this, 'division')">÷</span>	
+	</div>
+		
+	<div class="cal-sec ">
+	<span class="cal-btn " id="seven-btn" onclick="addValue(this)">7</span>
+	<span class="cal-btn" id="eight-btn" onclick="addValue(this)">8</span>
+	<span class="cal-btn" id="nine-btn" onclick="addValue(this)">9</span>	
+	<span class="cal-btn cal-key-func" id="multiplication-btn" onclick="addOperator(this, 'multiplication')">×</span>	
+	</div>	
+	
+	<div class="cal-sec">
+	<span class="cal-btn" id="four-btn" onclick="addValue(this)">4</span>
+	<span class="cal-btn" id="five-btn" onclick="addValue(this)">5</span>
+	<span class="cal-btn" id="six-btn" onclick="addValue(this)">6</span>	
+	<span class="cal-btn cal-key-func" id="substraction-btn" onclick="addOperator(this, 'substraction')">−</span>	
+	</div>
+		
+	<div class="cal-sec">
+	<span class="cal-btn" id="one-btn" onclick="addValue(this)">1</span>
+	<span class="cal-btn" id="two-btn" onclick="addValue(this)">2</span>
+	<span class="cal-btn" id="three-btn" onclick="addValue(this)">3</span>	
+	<span class="cal-btn cal-key-func" id="addition-btn" onclick="addOperator(this, 'addition')">+</span>	
+	</div>	
+		
+	<div class="cal-sec">
+	<span class="cal-btn" id="zero-btn" onclick="addValue(this)">0</span>
+	
+	
+	<span class="cal-btn" id="equal-btn" onclick="getResult()">=</span>	
+	</div>	
+		
+	
+	
+	</div>	
+</div>	
+</body>
+	
+<footer>
+<script src="js/script.js"></script>
+	
+</footer>	
+	
+</html>

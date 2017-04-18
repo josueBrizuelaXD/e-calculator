@@ -1,0 +1,114 @@
+html {
+	height: 100%;
+}
+
+body {
+	background: #79388F;
+	height: 100%;
+	font-family: Roboto-Thin;
+}
+
+
+.calculator-container {
+	position: absolute;
+	height: 810px;
+	width: 480px;
+	background: #79388F;
+	border-radius: 10px;
+	top: 10%;
+	left: 50%;
+	transform: translate(-50%, 0);
+	padding: 0px;
+	margin: 0px;
+	box-shadow: 0px 20px 70px black;
+}
+
+.cal-head {
+	display: inline-block;
+	height: 25%;
+	width: 100%;
+	background: #79388F;
+	background: -webkit-linear-gradient(left top,#C723E5, #EB7FFC);
+	background:linear-gradient(left top,#C723E5, #EB7FFC);
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	margin: 0px;
+	padding: 0px;
+}
+
+.cal-head > div {
+	display: block;
+	
+}
+
+.result-label {
+	text-align: right;
+	font-size: 90px; 
+	color: white;
+	font-weight: 100;
+	padding: 0px 10px;
+	margin: 15px 0px;
+}
+
+.history-label {
+	font-size: 35px;
+	text-align: right;
+	color: white;
+	margin-bottom: 5px;
+	padding: 0px 10px;
+}
+
+.cal-body {
+	height: 76%;
+	width: 100%;
+	background: black;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	margin: 0px;
+	padding: 0px;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+.cal-sec {
+	width: 480px;
+	margin: 0px;
+	height: 20%;
+	display: flex;
+	
+}
+
+.cal-btn {
+	font-size: 50px;
+	text-align: center;
+	color: #EB7FFC;
+	background: #EAEAEA;
+	display: inline-block;
+	margin: 0px 0px;
+	width: 25%;
+	height: 100%;
+	padding-bottom: 0px;
+	line-height: 125px;
+	
+}
+
+.cal-key-func {
+	background: black;
+	color: #79388F;
+}
+
+#equal-btn {
+	background: -webkit-linear-gradient(left top,#C723E5, #EB7FFC);
+	color: white;
+	border-bottom-right-radius: 10px;
+}
+
+#zero-btn {
+	border-bottom-left-radius: 10px;
+	width: 50%;
+}
+
+#AC-btn {
+	color: #white;
+}
+
