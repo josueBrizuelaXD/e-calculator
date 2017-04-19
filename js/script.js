@@ -23,10 +23,43 @@ var subStr = "−";
 var mulStr = "×";
 var divStr = "÷";
 var hasReset = false;
+var hasDecimalPoint = false;
+var hasPlaceDigitAfterDecimal = true;
+var isResultFloat = false;
+
+function addDecimalPoint(id) {
+	
+	if (hasDecimalPoint || isResultFloat) {
+		return;
+	}
+	
+	var historyStr = historyLbl.innerHTML;
+	var resultStr = resultLbl.innerHTML;
+	
+	if ((resultStr === addStr || historyStr[historyStr.length - 1] === addStr) || (resultStr === subStr || historyStr[historyStr.length - 1] === subStr) || (resultStr === mulStr || historyStr[historyStr.length - 1] === mulStr) || (resultStr === divStr || historyStr[historyStr.length - 1] === divStr)) {
+		
+		historyStr += "0" + id.innerHTML;
+		resultStr = "0" + id.innerHTML;
+	} else {
+		
+	historyStr += id.innerHTML;
+	resultStr += id.innerHTML;
+	}
+	
+
+	
+	historyLbl.innerHTML = historyStr;
+	resultLbl.innerHTML = resultStr;
+	
+	hasDecimalPoint = true;
+	hasPlaceDigitAfterDecimal = false;
+}
 
 function addValue(id) {
 	
-	 
+	 if (hasDecimalPoint) {
+		 hasPlaceDigitAfterDecimal = true;
+	 } 
 	
 	var historyStr = historyLbl.innerHTML;
 	var resultStr = resultLbl.innerHTML;
@@ -35,6 +68,9 @@ function addValue(id) {
 	return;		
 	}
 	
+	if (hasReset) {
+		hasReset = false;
+	}
 	console.log("id: " + id.innerHTML);
 	
 	if (historyLbl.innerHTML === "0" || hasReset) {
@@ -72,18 +108,30 @@ function addValue(id) {
 	
 }
 
-function addOperator(id, op){
-	if (resultLbl.innerHTML === "0") {
-		return;
-	}	
+function addOperator(id){
 	
-	hasReset = false;
+		if (resultLbl.innerHTML === "0" || historyLbl.innerHTML === "0") {
+		return;
+	}
+	
+	
+	if (!hasPlaceDigitAfterDecimal) {
+		return;
+	}
+	
+	if (isResultFloat) {
+		isResultFloat = false;
+	}
 	var historyStr = historyLbl.innerHTML;
 	resultLbl.innerHTML = id.innerHTML;
 	
 	if ((historyStr[historyStr.length - 1] === addStr) || (historyStr[historyStr.length - 1] === subStr) || (historyStr[historyStr.length - 1] === mulStr) || (historyStr[historyStr.length - 1] === divStr)) {
 		return;
 	}
+	
+
+	hasDecimalPoint = false;
+	hasReset = false;
 	
 	historyStr+=id.innerHTML;
 	historyLbl.innerHTML = historyStr;
@@ -96,6 +144,15 @@ function addOperator(id, op){
 function getResult(id) {
 var reg = /([+−×÷])/
 var historyStr = historyLbl.innerHTML;
+	
+if(historyStr[historyStr.length - 1] === addStr || historyStr[historyStr.length - 1] === subStr || historyStr[historyStr.length - 1] === mulStr || historyStr[historyStr.length - 1] === divStr) {
+	return;
+}	
+	
+if (!hasPlaceDigitAfterDecimal)	{
+	return;
+}
+	
 var arr = historyStr.split(reg);
 var operatorsArr = [];
 var operandArr = [];
@@ -114,6 +171,10 @@ for (var i = 0; i < arr.length ; i++) {
 var firstDig = operandArr[0];
 var firstOpera = operatorsArr[0];
 	
+	if (operandArr.length === 1) {
+		return;
+	}
+	
 for (var j = 0; j < operandArr.length; j++) {
 	
 	
@@ -125,16 +186,17 @@ for (var j = 0; j < operandArr.length; j++) {
 		console.log("firstOperand(before): " + firstOpera);
 		switch (firstOpera) {
 			case "+":
-				firstDig = parseInt(firstDig) + parseInt(secondD);
+				
+				firstDig = parseFloat(firstDig) + parseFloat(secondD);
 				break;
 			case "−":
-				firstDig = parseInt(firstDig) - parseInt(secondD);
+				firstDig = parseFloat(firstDig) - parseFloat(secondD);
 				break;
 			case "×":
-				firstDig = parseInt(firstDig) * parseInt(secondD);
+				firstDig = parseFloat(firstDig) * parseFloat(secondD);
 				break;
 			case "÷":
-				firstDig = parseInt(firstDig) / parseInt(secondD);
+				firstDig = parseFloat(firstDig) / parseFloat(secondD);
 				break;
 			default:
 				break;	
@@ -148,22 +210,118 @@ for (var j = 0; j < operandArr.length; j++) {
 console.log("arrOperand: " + operandArr);	
 console.log("arrOperators: " + operatorsArr);
 console.log("RESULT: " + firstDig);	
-resultLbl.innerHTML = firstDig;
-historyLbl.innerHTML = firstDig;	
-hasReset = true;	
+
+	
+if (Number.isInteger(firstDig)) {
+	console.log("result is integer");	
+	resultLbl.innerHTML = firstDig;
+    historyLbl.innerHTML = firstDig;
+} else {
+	console.log("result is float");
+	resultLbl.innerHTML = (Math.floor(firstDig * 100) / 100).toFixed(2)
+    historyLbl.innerHTML = (Math.floor(firstDig * 100) / 100).toFixed(2)
+	isResultFloat = true;
+}	
+hasReset = true;
+hasDecimalPoint = false;	
 }
 
-function clearLastOperation(id) {
+function clearLastOperation() {
+	
+var reg = /([+−×÷])/
 var historyStr = historyLbl.innerHTML;
-var newStr = historyStr.slice(0, historyStr.length - 1);
-historyLbl.innerHTML = newStr;	
+	
+	historyStr.trim();
+	console.log("history: " + historyStr);
+var arr = historyStr.split(reg);
+	console.log("arr(before): " + arr);
+	console.log("arr length(before): " + arr.length);
+
+	
+	if(historyStr[historyStr.length - 1] === addStr || historyStr[historyStr.length - 1] === subStr || historyStr[historyStr.length - 1] === mulStr || historyStr[historyStr.length - 1] === divStr) {
+	arr.pop();
+	arr.pop();	
+} else {
+	arr.pop();
+}	
+
+
+	
+	console.log("arr after pop: " + arr);
+var newStr = arr.join("");
+	console.log("***newStr:*** " + newStr);
+	
+	if (newStr.length <= 0) {
+		newStr = "0";
+		hasReset = true;
+		hasDecimalPoint = false;
+		hasPlaceDigitAfterDecimal = true;
+		isResultFloat = false;
+	}
+	
+	historyLbl.innerHTML = newStr;
+	
+resultLbl.innerHTML = "0";
+hasDecimalPoint = false;	
+	
+	
 
 }
 
-function clearWholeOperation(id) {
-	leftOp = undefined;
-	rightOp = undefined;
-	isOperating = false;
-	historyLbl.innerHTML = 0;
-	resultLbl.innerHTML = 0;
+function clearWholeOperation() {
+	hasReset = true;
+    hasDecimalPoint = false;
+	hasPlaceDigitAfterDecimal = true;
+	isResultFloat = false;
+	historyLbl.innerHTML = "0";
+	resultLbl.innerHTML = "0";
+}
+
+
+function changeColor(ob) {
+	console.log("changeID: " + ob.id);
+	var ele =  document.getElementById(ob.id);
+	var attr = ele.getAttribute("class");
+	console.log("attr: " +  attr);
+	
+	var arr = attr.split(" ");
+	console.log(arr);
+	
+	if(arr[1] === "cal-key-func") {
+		
+		if(ob.id === "AC-btn") {
+			ele.style.background = "black";
+			ele.style.color = "red";
+		} else {
+			ele.style.background = "white";
+		}
+		
+		
+
+	} else {
+		ele.style.background = "black";
+		ele.style.color = "white";
+	}
+}
+
+function changeColorBack(ob) {
+		console.log("changeID: " + ob.id);
+	var ele =  document.getElementById(ob.id);
+	var attr = ele.getAttribute("class");
+	console.log("attr: " +  attr);
+	
+	var arr = attr.split(" ");
+	console.log(arr);
+	
+	if(arr[1] === "cal-key-func") {
+		if(ob.id === "AC-btn") {
+			ele.style.background = "red";
+			ele.style.color = "white";
+		} else {
+			ele.style.background = "black";
+		}
+	} else {
+		ele.style.background = "white";
+		ele.style.color = "#EB7FFC";
+	}
 }
